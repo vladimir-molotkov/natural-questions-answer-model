@@ -73,11 +73,11 @@ def preprocess_nq(example):
     ):
         first_annotation = example["annotations"][0]
         if (
-            isinstance(first_annotation, dict)
-            and "short_answers" in first_annotation
-            and isinstance(first_annotation["short_answers"], list)
-            and len(first_annotation["short_answers"]) > 0
-            and isinstance(first_annotation["short_answers"][0], dict)
+            isinstance(first_annotation, dict) \
+            and "short_answers" in first_annotation \
+            and isinstance(first_annotation["short_answers"], list) \
+            and len(first_annotation["short_answers"]) > 0 \
+            and isinstance(first_annotation["short_answers"][0], dict) \
         ):
             result["answer"] = first_annotation["short_answers"][0].get("text", "")
 
