@@ -1,7 +1,9 @@
 import time
+from typing import Optional
 
+import fire
 import hydra
-from omegaconf import DictConfig
+from omegaconf import OmegaConf
 
 from scripts.gpt_train import train_gpt
 from scripts.vanilla_bert_benchmark import benchmark_bert
@@ -28,11 +30,24 @@ def run_benchmarks(bert_model_name, gpt_model_name, sample_size, batch_size):
     return bert_loss, gpt_loss
 
 
-@hydra.main(version_base=None, config_path="configs", config_name="config")
-def main(cfg: DictConfig):
+def main(benchmark: Optional[bool] = True, train: Optional[bool] = True):
     configure_mps()
-    sample_size = cfg.data.val_sample_size
 
+    with hydra.initialize(config_path="configs"):
+        hydra_cfg = hydra.compose(config_name="config")
+
+    cli_conf = OmegaConf.create(
+        {
+            "run_type": {
+                "benchmark": benchmark,
+                "train": train,
+            }
+        }
+    )
+    cfg = OmegaConf.merge(hydra_cfg, cli_conf)
+    print("Config finished")
+
+    sample_size = cfg.data.val_sample_size
     if cfg.run_type.benchmark:
         bert_loss, vanilla_gpt_loss = run_benchmarks(
             cfg.model.bert_name,
@@ -40,6 +55,7 @@ def main(cfg: DictConfig):
             cfg.data.val_sample_size,
             cfg.training.batch_size,
         )
+        print(f"BERT Loss: {bert_loss}, GPT Loss {vanilla_gpt_loss}")
 
     if cfg.run_type.train:
         print("\nTraining GPT Model")
@@ -58,4 +74,4 @@ def main(cfg: DictConfig):
 
 
 if __name__ == "__main__":
-    main()
+    fire.Fire(main())
