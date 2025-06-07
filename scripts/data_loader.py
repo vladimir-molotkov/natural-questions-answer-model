@@ -45,16 +45,6 @@ def download_nq_data():
     print(f"Dataset saved to {data_dir}")
 
 
-# def load_local_nq_data(split="train"):
-#     """Load dataset from local storage"""
-#     data_dir = "data/natural_questions"
-#     if not os.path.exists(data_dir):
-#         download_nq_data()
-
-#     dataset = DatasetDict.load_from_disk(data_dir)
-#     return dataset[split]
-
-
 def preprocess_nq(example):
     """Extract first short answer from Natural Questions examples with complete error handling"""
 
