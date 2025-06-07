@@ -10,7 +10,6 @@ from utils.mps_enable import configure_mps
 
 
 def run_benchmarks(bert_model_name, gpt_model_name, sample_size, batch_size):
-    print("Benchmarking BERT Baseline")
     start = time.time()
     bert_loss = benchmark_bert(
         model_name=bert_model_name,
@@ -19,7 +18,6 @@ def run_benchmarks(bert_model_name, gpt_model_name, sample_size, batch_size):
     )
     print(f"BERT Validation Loss: {bert_loss}. Time: {time.time() - start:.0f}s")
 
-    print("\nBenchmarking Vanilla GPT")
     start = time.time()
     gpt_loss = benchmark_gpt(
         model_name=gpt_model_name,
@@ -35,7 +33,6 @@ def main(cfg: DictConfig):
     configure_mps()
     sample_size = cfg.data.val_sample_size
 
-    # Initial benchmarks
     if cfg.run_type.benchmark:
         bert_loss, vanilla_gpt_loss = run_benchmarks(
             cfg.model.bert_name,
@@ -55,7 +52,6 @@ def main(cfg: DictConfig):
         )
         print(f"Training completed. Time: {time.time() - start:.0f}s")
 
-        print("\nBenchmarking Trained GPT")
         start = time.time()
         trained_loss = benchmark_gpt(trained_model, sample_size)
         print(f"Trained GPT Loss: {trained_loss} | Time: {time.time() - start:.0f}s")
