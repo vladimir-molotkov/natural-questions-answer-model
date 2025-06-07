@@ -58,7 +58,7 @@
    ```bash
    python run_experiment.py
    ```
-   Если не активировали окружение в п.5, используйте:
+   Если не активировали окружение в п.4, используйте:
    ```bash
    poetry run python run_experiment.py
    ```
