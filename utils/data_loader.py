@@ -57,10 +57,16 @@ def load_local_nq_data(split="train"):
 
 def preprocess_nq(example):
     """Extract first short answer from Natural Questions examples"""
-    if example["annotations"][0]["short_answers"]:
-        answer = example["annotations"][0]["short_answers"][0]["text"]
-    else:
-        answer = ""
+    # Check if there are any annotations
+    if not example.get("annotations") or len(example["annotations"]) == 0:
+        return {"id": example["id"], "question": "", "context": "", "answer": ""}
+
+    first_annotation = example["annotations"][0]
+    if (not first_annotation.get("short_answers") or len(first_annotation["short_answers"]) == 0):
+        return {"id": example["id"], "question": "", "context": "", "answer": ""}
+
+    answer = first_annotation["short_answers"][0]["text"]
+
     return {
         "id": example["id"],
         "question": example["question"]["text"],
@@ -69,7 +75,7 @@ def preprocess_nq(example):
     }
 
 
-def get_nq_data(split="train"):
+def get_nq_data(split="train", sample_size=None):
     """Main data loading function with DVC integration"""
     try:
         return load_local_nq_data(split)

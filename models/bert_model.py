@@ -62,10 +62,10 @@ def create_bert_dataloader(dataset, tokenizer, batch_size=8):
     return DataLoader(tokenized, batch_size=batch_size)
 
 
-def benchmark_bert(sample_size=1000):
-    params = get_dvc_params()
-    sample_size = params["data"]["sample_size"]
-    batch_size = params["model"]["batch_size"]
+def benchmark_bert(sample_size, batch_size):
+    # params = get_dvc_params()
+    # sample_size = params["data"]["sample_size"]
+    # batch_size = params["model"]["batch_size"]
 
     model = BertQAModel()
     tokenizer = model.tokenizer
