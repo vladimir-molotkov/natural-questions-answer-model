@@ -56,10 +56,10 @@
 7. Запуск эксперимента
    После активации окружения выполните:
    ```bash
-   python run_experiment.py
+   python main.py
    ```
    Если не активировали окружение в п.4, используйте:
    ```bash
-   poetry run python run_experiment.py
+   poetry run python main.py
    ```
 
