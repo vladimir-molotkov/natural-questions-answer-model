@@ -1,5 +1,6 @@
 import pytorch_lightning as pl
 import torch
+from mlflow_utils import MLflowLogger
 from torch.utils.data import DataLoader
 from transformers import BertForQuestionAnswering, BertTokenizerFast
 
@@ -12,6 +13,14 @@ class BertQAModel(pl.LightningModule):
         self.model = BertForQuestionAnswering.from_pretrained(model_name)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
         self.validation_step_outputs = []
+        self.mlflow_logger = MLflowLogger()
+        self.mlflow_logger.log_params(
+            {
+                "model_type": "BERT",
+                "model_name": model_name,
+                "task": "question_answering",
+            }
+        )
 
     def forward(self, input_ids, attention_mask):
         return self.model(input_ids, attention_mask=attention_mask)

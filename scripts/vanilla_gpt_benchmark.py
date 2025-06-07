@@ -1,5 +1,6 @@
 import pytorch_lightning as pl
 import torch
+from mlflow_utils import MLflowLogger
 from torch.utils.data import DataLoader
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
@@ -13,6 +14,14 @@ class GPT2QAModel(pl.LightningModule):
         self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.validation_step_outputs = []
+        self.mlflow_logger = MLflowLogger()
+        self.mlflow_logger.log_params(
+            {
+                "model_type": "BERT",
+                "model_name": model_name,
+                "task": "question_answering",
+            }
+        )
 
     def forward(self, input_ids, attention_mask, labels=None):
         return self.model(input_ids, attention_mask=attention_mask, labels=labels)

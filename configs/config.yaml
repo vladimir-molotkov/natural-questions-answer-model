@@ -6,6 +6,9 @@ run_type:
   benchmark: True
   train: True
 
+ml_flow:
+  url: "http://127.0.0.1:8080"
+
 data:
   train_sample_size: 2000
   val_sample_size: 500
