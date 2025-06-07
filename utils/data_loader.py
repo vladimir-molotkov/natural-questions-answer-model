@@ -6,7 +6,7 @@ from datasets import DatasetDict, load_dataset
 
 
 def get_dvc_params():
-    config_path = Path(__file__).parent / "configs" / "params.yaml"
+    config_path = Path(__file__).resolve().parent.parent / "configs" / "params.yaml"
     return dvc.api.params_show(str(config_path))
 
 
