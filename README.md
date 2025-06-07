@@ -27,18 +27,18 @@
 Модель может быть использована в качестве простого чат-бота для ответа на вопросы по естестенным науками. Кроме того, модель не требует значительных ресурсов для запуска.
 
 # Установка
-1. Клонирование репозитория
+1. Клонируйте репозиторий
    ```bash
    git clone https://github.com/vladimir-molotkov/natural-questions-answer-model.git
    cd natural-questions-answer-model
    ```
-3. Установка Poetry
+3. Установите Poetry
    Убедитесь, что у вас установлен `poetry`. Если нет, установите его:
    ```bash
    # Linux/macOS
    curl -sSL https://install.python-poetry.org | python3 -
    ```
-4. Установка зависимостей
+4. Установите зависимостей
    В папке проекта выполните:
    ```bash
    poetry install
