@@ -102,6 +102,6 @@ def get_nq_data(split="train", sample_size=None):
     try:
         return load_local_nq_data(split)
     except Exception:
-        print("Downloading fresh dataset...")
+        print("Downloading fresh dataset")
         download_nq_data()
         return load_local_nq_data(split)

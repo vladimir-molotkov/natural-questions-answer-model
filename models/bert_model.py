@@ -58,15 +58,11 @@ def create_bert_dataloader(dataset, tokenizer, batch_size=8):
         )
 
     tokenized = dataset.map(tokenize_fn, batched=True)
-    tokenized.set_format(type="torch", columns=["input_ids", "attention_mask"])
+    # tokenized.set_format(type="torch")
     return DataLoader(tokenized, batch_size=batch_size)
 
 
 def benchmark_bert(sample_size, batch_size):
-    # params = get_dvc_params()
-    # sample_size = params["data"]["sample_size"]
-    # batch_size = params["model"]["batch_size"]
-
     model = BertQAModel()
     tokenizer = model.tokenizer
     val_data = load_nq_data(split="validation", sample_size=sample_size)
@@ -76,4 +72,4 @@ def benchmark_bert(sample_size, batch_size):
         accelerator="auto", devices="auto", logger=False, enable_checkpointing=False
     )
     results = trainer.validate(model, val_loader)
-    return results[0]["avg_val_loss"].item()
+    return results
