@@ -5,18 +5,13 @@ description = ""
 authors = [
     {name = "vladimir-molotkov",email = "molotkov1vl@gmail.com"}
 ]
-license = "GPL-3.0-or-later"
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "torch (>=2.7.1,<3.0.0)",
     "pytorch-lightning (>=2.5.1.post0,<3.0.0)",
 ]
-
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
 fire = "^0.7.0"
@@ -34,3 +29,9 @@ isort = "^6.0.1"
 flake8 = "^7.2.0"
 flake8-bugbear = "^24.12.12"
 dvc = "^3.60.0"
+hydra-core = "^1.3.2"
+omegaconf = "^2.3.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
