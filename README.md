@@ -37,6 +37,8 @@
    ```bash
    # Linux/macOS
    curl -sSL https://install.python-poetry.org | python3 -
+   # Windows (PowerShell)
+   (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
    ```
 4. Установите зависимостей
    В папке проекта выполните:
