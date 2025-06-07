@@ -1,5 +1,5 @@
 from datasets import load_dataset
-import numpy as np
+
 
 def preprocess_nq(example):
     """Extract short answers from Natural Questions examples"""
@@ -12,8 +12,9 @@ def preprocess_nq(example):
         "id": example["id"],
         "question": example["question"]["text"],
         "context": " ".join(example["document"]["tokens"]),
-        "short_answers": short_answers
+        "short_answers": short_answers,
     }
+
 
 def load_nq_data(split="train", sample_size=1000):
     """Load google-research-datasets/natural_questions dataset
