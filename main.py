@@ -3,8 +3,9 @@ import time
 import hydra
 from omegaconf import DictConfig
 
+from scripts.gpt_train import train_gpt
 from scripts.vanilla_bert_benchmark import benchmark_bert
-from scripts.vanilla_gpt_benchmark import benchmark_gpt, train_gpt
+from scripts.vanilla_gpt_benchmark import benchmark_gpt
 from utils.mps_enable import configure_mps
 
 
@@ -57,16 +58,7 @@ def main(cfg: DictConfig):
         print("\nBenchmarking Trained GPT")
         start = time.time()
         trained_loss = benchmark_gpt(trained_model, sample_size)
-        print(
-            f"Trained GPT Loss: {trained_loss:.4f} | Time: {time.time() - start:.0f}s"
-        )
-
-        improvement = (vanilla_gpt_loss - trained_loss) / vanilla_gpt_loss * 100
-        print("\nSummary")
-        print(f"BERT Loss: {bert_loss:.4f}")
-        print(f"Vanilla GPT Loss: {vanilla_gpt_loss:.4f}")
-        print(f"Trained GPT Loss: {trained_loss:.4f}")
-        print(f"Improvement: {improvement:.1f}%")
+        print(f"Trained GPT Loss: {trained_loss} | Time: {time.time() - start:.0f}s")
 
 
 if __name__ == "__main__":

@@ -9,8 +9,8 @@ from scripts.data_loader import get_nq_data
 class GPT2QAModel(pl.LightningModule):
     def __init__(self, model_name="gpt2"):
         super().__init__()
-        self.model = GPT2LMHeadModel.from_pretrained(model_name)
-        self.tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+        self.model = GPT2LMHeadModel.from_pretrained("gpt2")
+        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.validation_step_outputs = []
 
