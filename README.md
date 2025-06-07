@@ -28,19 +28,36 @@
 
 # Установка
 1. Клонирование репозитория
-```
-git clone https://github.com/vladimir-molotkov/natural-questions-answer-model.git
-cd natural-questions-answer-model
-```
-### Установка Poetry
-Убедитесь, что у вас установлен `poetry`. Если нет, установите его:
-```
-# Linux/macOS
-curl -sSL https://install.python-poetry.org | python3 -
-```
-### Установка зависимостей
-В папке проекта выполните:
-```
-poetry install
-```
+   ```bash
+   git clone https://github.com/vladimir-molotkov/natural-questions-answer-model.git
+   cd natural-questions-answer-model
+   ```
+3. Установка Poetry
+   Убедитесь, что у вас установлен `poetry`. Если нет, установите его:
+   ```bash
+   # Linux/macOS
+   curl -sSL https://install.python-poetry.org | python3 -
+   ```
+4. Установка зависимостей
+   В папке проекта выполните:
+   ```bash
+   poetry install
+   ```
+5. Активируйте виртуальное окружение
+   ```bash
+   poetry env activate
+   ```
+6. Загрузите датасет
+   ```bash
+   dvc pull
+   ```
+7. Запуск эксперимента
+   После активации окружения выполните:
+   ```bash
+   python run_experiment.py
+   ```
+   Если не активировали окружение в п.5, используйте:
+   ```bash
+   poetry run python run_experiment.py
+   ```
 
