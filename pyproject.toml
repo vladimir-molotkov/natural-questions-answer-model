@@ -22,4 +22,5 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
 fire = "^0.7.0"
+tqdm = "^4.67.1"
 
