@@ -1,39 +1,39 @@
+from typing import Optional
+
 import fire
 import torch
-from gpt_model import GPT2QAModel
-from transformers import GPT2Tokenizer
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 
 class GPT2QAInference:
-    def __init__(self, checkpoint_path, device="auto"):
+    def __init__(
+        self, checkpoint_path: Optional[str] = "", device: Optional[str] = "mps"
+    ):
         """
         Load trained GPT-2 model for question answering
 
         Args:
             checkpoint_path: Path to trained PyTorch Lightning checkpoint
-            device: "auto", "mps", "cpu", or "cuda"
+            device: "mps", "cpu", or "cuda"
         """
-        if device == "auto":
-            self.device = torch.device(
-                "mps"
-                if torch.backends.mps.is_available()
-                else "cuda"
-                if torch.cuda.is_available()
-                else "cpu"
-            )
-        else:
-            self.device = torch.device(device)
-
-        print(f"Using device: {self.device}")
-
-        self.model = GPT2QAModel.load_from_checkpoint(
-            checkpoint_path, map_location=self.device
-        )
-        self.model.eval()
-        self.model.to(self.device)
-
+        self.device = torch.device(device)
         self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         self.tokenizer.pad_token = self.tokenizer.eos_token
+
+        if checkpoint_path:
+            print("Loading trained model")
+            self.model = GPT2LMHeadModel.from_pretrained(
+                "gpt2",
+                state_dict=torch.load(checkpoint_path, map_location=self.device)[
+                    "state_dict"
+                ],
+            )
+        else:
+            print("Using GPT-2 from Hugging Face")
+            self.model = GPT2LMHeadModel.from_pretrained("gpt2")
+
+        self.model.eval()
+        self.model.to(self.device)
 
     def ask(self, question, max_length=100, temperature=0.7, top_k=50):
         """
@@ -52,7 +52,7 @@ class GPT2QAInference:
         ).to(self.device)
 
         with torch.no_grad():
-            outputs = self.model.model.generate(
+            outputs = self.model.generate(
                 input_ids=inputs["input_ids"],
                 attention_mask=inputs["attention_mask"],
                 max_new_tokens=max_length,
@@ -94,4 +94,4 @@ def main(checkpoint_path, device="auto"):
 
 
 if __name__ == "__main__":
-    fire.Fire({"interactive": main, "ask": GPT2QAInference})
+    fire.Fire({"interactive": main, "single": GPT2QAInference})
