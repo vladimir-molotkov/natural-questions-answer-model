@@ -1,6 +1,5 @@
 import time
 
-import fire
 import hydra
 from omegaconf import DictConfig
 
@@ -71,5 +70,4 @@ def main(cfg: DictConfig):
 
 
 if __name__ == "__main__":
-    # main()
-    fire.Fire(main)
+    main()

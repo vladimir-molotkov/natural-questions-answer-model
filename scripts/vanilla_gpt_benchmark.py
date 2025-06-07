@@ -69,28 +69,4 @@ def benchmark_gpt(model_name="gpt2", sample_size=1000, batch_size=8):
         accelerator="auto", devices="auto", logger=False, enable_checkpointing=False
     )
     results = trainer.validate(model, val_loader)
-    return results[0]["avg_val_loss"].item()
-
-
-def train_gpt(
-    model_name="gpt2",
-    train_sample_size=5000,
-    val_sample_size=1000,
-    epochs=3,
-    batch_size=8,
-):
-    model = GPT2QAModel(model_name)
-    train_data = get_nq_data(split="train", sample_size=train_sample_size)
-    val_data = get_nq_data(split="validation", sample_size=val_sample_size)
-    train_loader = create_gpt_dataloader(train_data, model.tokenizer, batch_size)
-    val_loader = create_gpt_dataloader(val_data, model.tokenizer, batch_size)
-
-    trainer = pl.Trainer(
-        max_epochs=epochs,
-        accelerator="auto",
-        devices="auto",
-        log_every_n_steps=5,
-        enable_checkpointing=True,
-    )
-    trainer.fit(model, train_loader, val_loader)
-    return model
+    return results
