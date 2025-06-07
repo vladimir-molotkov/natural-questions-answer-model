@@ -1,0 +1,23 @@
+stages:
+  download_data:
+    cmd:
+      python -c "from utils.data_loader import download_nq_data;
+      download_nq_data()"
+    deps:
+      - ../utils/data_loader.py
+    outs:
+      - ../data/natural_questions
+    params:
+      - params.yaml:data.sample_size
+  train:
+    cmd: python ../run_experiment.py
+    deps:
+      - ../data/natural_questions
+      - ../utils/dataloader.py
+      - ../models/bert_model.py
+      - ../models/gpt_model.py
+      - ../run_experiment.py
+    params:
+      - params.yaml:data.sample_size
+      - params.yaml:model.epochs
+      - params.yaml:model.batch_size

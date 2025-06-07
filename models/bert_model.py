@@ -1,9 +1,17 @@
+from pathlib import Path
+
+import dvc.api
 import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader
 from transformers import BertForQuestionAnswering, BertTokenizerFast
 
-from utils.data_loader import load_nq_data
+from utils.data_loader import get_nq_data as load_nq_data
+
+
+def get_dvc_params():
+    config_path = Path(__file__).parent / "configs" / "params.yaml"
+    return dvc.api.params_show(str(config_path))
 
 
 class BertQAModel(pl.LightningModule):
@@ -55,10 +63,14 @@ def create_bert_dataloader(dataset, tokenizer, batch_size=8):
 
 
 def benchmark_bert(sample_size=1000):
+    params = get_dvc_params()
+    sample_size = params["data"]["sample_size"]
+    batch_size = params["model"]["batch_size"]
+
     model = BertQAModel()
     tokenizer = model.tokenizer
     val_data = load_nq_data(split="validation", sample_size=sample_size)
-    val_loader = create_bert_dataloader(val_data, tokenizer)
+    val_loader = create_bert_dataloader(val_data, tokenizer, batch_size)
 
     trainer = pl.Trainer(
         accelerator="auto", devices="auto", logger=False, enable_checkpointing=False

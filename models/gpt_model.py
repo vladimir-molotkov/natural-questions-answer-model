@@ -1,9 +1,17 @@
+from pathlib import Path
+
+import dvc.api
 import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-from utils.data_loader import load_nq_data
+from utils.data_loader import get_nq_data as load_nq_data
+
+
+def get_dvc_params():
+    config_path = Path(__file__).parent / "configs" / "params.yaml"
+    return dvc.api.params_show(str(config_path))
 
 
 class GPT2QAModel(pl.LightningModule):
@@ -64,8 +72,13 @@ def create_gpt_dataloader(dataset, tokenizer, batch_size=8):
 
 def benchmark_gpt(model_name="gpt2", sample_size=1000):
     model = GPT2QAModel(model_name)
+
+    params = get_dvc_params()
+    batch_size = params["model"]["batch_size"]
+    sample_size = params["data"]["sample_size"]
+
     val_data = load_nq_data(split="validation", sample_size=sample_size)
-    val_loader = create_gpt_dataloader(val_data, model.tokenizer)
+    val_loader = create_gpt_dataloader(val_data, model.tokenizer, batch_size)
 
     trainer = pl.Trainer(
         accelerator="auto", devices="auto", logger=False, enable_checkpointing=False
@@ -77,11 +90,15 @@ def benchmark_gpt(model_name="gpt2", sample_size=1000):
 def train_gpt(
     model_name="gpt2", train_sample_size=5000, val_sample_size=1000, epochs=3
 ):
+    params = get_dvc_params()
+    batch_size = params["model"]["batch_size"]
+    epochs = params["model"]["epochs"]
+
     model = GPT2QAModel(model_name)
     train_data = load_nq_data(split="train", sample_size=train_sample_size)
     val_data = load_nq_data(split="validation", sample_size=val_sample_size)
-    train_loader = create_gpt_dataloader(train_data, model.tokenizer)
-    val_loader = create_gpt_dataloader(val_data, model.tokenizer)
+    train_loader = create_gpt_dataloader(train_data, model.tokenizer, batch_size)
+    val_loader = create_gpt_dataloader(val_data, model.tokenizer, batch_size)
 
     trainer = pl.Trainer(
         max_epochs=epochs,
