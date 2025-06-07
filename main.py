@@ -4,8 +4,8 @@ from pathlib import Path
 import dvc.api
 import fire
 
-from scripts.bert_model import benchmark_bert
-from scripts.gpt_model import benchmark_gpt, train_gpt
+from scripts.vanilla_bert_benchmark import benchmark_bert
+from scripts.vanilla_gpt_benchmark import benchmark_gpt, train_gpt
 from utils.mps_enable import configure_mps
 
 
