@@ -1,0 +1,17 @@
+stages:
+  download_data:
+    cmd:
+      python -c 'from utils.data_loader import download_nq_data;
+      download_nq_data()'
+    deps:
+      - utils/data_loader.py
+    outs:
+      - data/natural_questions
+  train:
+    cmd: python run_experiment.py
+    deps:
+      - bert_model.py
+      - data/natural_questions
+      - gpt_model.py
+      - run_experiment.py
+      - utils.data_loader.py

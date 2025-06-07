@@ -1,7 +1,13 @@
 import os
+from pathlib import Path
 
 import dvc.api
 from datasets import DatasetDict, load_dataset
+
+
+def get_dvc_params():
+    config_path = Path(__file__).parent / "configs" / "params.yaml"
+    return dvc.api.params_show(str(config_path))
 
 
 def download_nq_data():
@@ -10,7 +16,7 @@ def download_nq_data():
     os.makedirs(data_dir, exist_ok=True)
 
     # Load parameters from params.yaml
-    params = dvc.api.params_show()
+    params = get_dvc_params()
     sample_size = params["data"]["sample_size"]
 
     print(f"Downloading Natural Questions dataset (sample: {sample_size})...")
