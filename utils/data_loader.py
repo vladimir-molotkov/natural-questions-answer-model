@@ -16,6 +16,15 @@ def preprocess_nq(example):
     }
 
 def load_nq_data(split="train", sample_size=1000):
+    """Load google-research-datasets/natural_questions dataset
+
+    Args:
+        split (str, optional): dataset part. Defaults to "train".
+        sample_size (int, optional): sample size. Defaults to 1000.
+
+    Returns:
+        _type_: _description_
+    """
     dataset = load_dataset("google-research-datasets/natural_questions", split=split)
     dataset = dataset.map(preprocess_nq, remove_columns=dataset.column_names)
     dataset = dataset.filter(lambda x: len(x["short_answers"]) > 0)

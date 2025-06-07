@@ -1,5 +1,5 @@
-from bert_model import benchmark_bert
-from gpt_model import train_gpt
+from models.bert_model import benchmark_bert
+from models.gpt_model import train_gpt
 import numpy as np
 
 if __name__ == "__main__":
