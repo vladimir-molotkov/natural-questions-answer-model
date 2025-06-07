@@ -3,10 +3,9 @@ from pathlib import Path
 import dvc.api
 import pytorch_lightning as pl
 import torch
+from data_loader import get_nq_data as load_nq_data
 from torch.utils.data import DataLoader
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-
-from scripts.data_loader import get_nq_data as load_nq_data
 
 
 def get_dvc_params():
