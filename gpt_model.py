@@ -2,7 +2,7 @@ import torch
 import pytorch_lightning as pl
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from torch.utils.data import DataLoader
-from data_utils import load_nq_data
+from utils.data_loader  import load_nq_data
 
 class GPT2QAModel(pl.LightningModule):
     def __init__(self, model_name="gpt2"):
