@@ -5,6 +5,7 @@ description = ""
 authors = [
     {name = "vladimir-molotkov",email = "molotkov1vl@gmail.com"}
 ]
+license = "GPL-3.0-or-later"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
