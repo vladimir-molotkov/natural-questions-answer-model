@@ -1,8 +1,9 @@
 import pytorch_lightning as pl
 import torch
-from data_loader import get_nq_data as load_nq_data
 from torch.utils.data import DataLoader
 from transformers import BertForQuestionAnswering, BertTokenizerFast
+
+from scripts.data_loader import get_nq_data
 
 
 class BertQAModel(pl.LightningModule):
@@ -56,7 +57,7 @@ def create_bert_dataloader(dataset, tokenizer, batch_size=8):
 def benchmark_bert(model_name, sample_size, batch_size):
     model = BertQAModel(model_name)
     tokenizer = model.tokenizer
-    val_data = load_nq_data(split="validation", sample_size=sample_size)
+    val_data = get_nq_data(split="validation", sample_size=sample_size)
     val_loader = create_bert_dataloader(val_data, tokenizer, batch_size)
 
     trainer = pl.Trainer(

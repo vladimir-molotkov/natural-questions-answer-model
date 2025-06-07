@@ -1,8 +1,9 @@
 import pytorch_lightning as pl
 import torch
-from data_loader import get_nq_data as load_nq_data
 from torch.utils.data import DataLoader
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+from scripts.data_loader import get_nq_data
 
 
 class GPT2QAModel(pl.LightningModule):
@@ -61,7 +62,7 @@ def create_gpt_dataloader(dataset, tokenizer, batch_size=8):
 
 def benchmark_gpt(model_name="gpt2", sample_size=1000, batch_size=8):
     model = GPT2QAModel(model_name)
-    val_data = load_nq_data(split="validation", sample_size=sample_size)
+    val_data = get_nq_data(split="validation", sample_size=sample_size)
     val_loader = create_gpt_dataloader(val_data, model.tokenizer, batch_size)
 
     trainer = pl.Trainer(
@@ -79,8 +80,8 @@ def train_gpt(
     batch_size=8,
 ):
     model = GPT2QAModel(model_name)
-    train_data = load_nq_data(split="train", sample_size=train_sample_size)
-    val_data = load_nq_data(split="validation", sample_size=val_sample_size)
+    train_data = get_nq_data(split="train", sample_size=train_sample_size)
+    val_data = get_nq_data(split="validation", sample_size=val_sample_size)
     train_loader = create_gpt_dataloader(train_data, model.tokenizer, batch_size)
     val_loader = create_gpt_dataloader(val_data, model.tokenizer, batch_size)
 
