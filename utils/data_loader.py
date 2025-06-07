@@ -45,41 +45,63 @@ def download_nq_data():
     print(f"Dataset saved to {data_dir}")
 
 
-def load_local_nq_data(split="train"):
-    """Load dataset from local storage"""
-    data_dir = "data/natural_questions"
-    if not os.path.exists(data_dir):
-        download_nq_data()
+# def load_local_nq_data(split="train"):
+#     """Load dataset from local storage"""
+#     data_dir = "data/natural_questions"
+#     if not os.path.exists(data_dir):
+#         download_nq_data()
 
-    dataset = DatasetDict.load_from_disk(data_dir)
-    return dataset[split]
+#     dataset = DatasetDict.load_from_disk(data_dir)
+#     return dataset[split]
 
 
 def preprocess_nq(example):
-    """Extract first short answer from Natural Questions examples"""
-    # Check if there are any annotations
-    if not example.get("annotations") or len(example["annotations"]) == 0:
-        return {"id": example["id"], "question": "", "context": "", "answer": ""}
+    """Extract first short answer from Natural Questions examples with complete error handling"""
 
-    first_annotation = example["annotations"][0]
-    if (not first_annotation.get("short_answers") or len(first_annotation["short_answers"]) == 0):
-        return {"id": example["id"], "question": "", "context": "", "answer": ""}
+    result = {"id": example.get("id", ""), "question": "", "context": "", "answer": ""}
 
-    answer = first_annotation["short_answers"][0]["text"]
+    if "question" in example and isinstance(example["question"], dict):
+        result["question"] = example["question"].get("text", "")
 
-    return {
-        "id": example["id"],
-        "question": example["question"]["text"],
-        "context": " ".join(example["document"]["tokens"]),
-        "answer": answer,
-    }
+    if "document" in example and "tokens" in example["document"]:
+        result["context"] = " ".join(example["document"]["tokens"])
+
+    if (
+        "annotations" in example
+        and isinstance(example["annotations"], list)
+        and len(example["annotations"]) > 0
+    ):
+        first_annotation = example["annotations"][0]
+        if (
+            isinstance(first_annotation, dict)
+            and "short_answers" in first_annotation
+            and isinstance(first_annotation["short_answers"], list)
+            and len(first_annotation["short_answers"]) > 0
+            and isinstance(first_annotation["short_answers"][0], dict)
+        ):
+            result["answer"] = first_annotation["short_answers"][0].get("text", "")
+
+    return result
+
+
+def load_local_nq_data(split="train"):
+    """Load dataset from local storage with validation"""
+    data_dir = Path("data/natural_questions")
+    try:
+        dataset = DatasetDict.load_from_disk(str(data_dir))
+        if split not in dataset:
+            raise ValueError(f"Split {split} not found in local dataset")
+        return dataset[split]
+    except Exception as e:
+        print(f"Local data loading failed: {str(e)}")
+        raise
 
 
 def get_nq_data(split="train", sample_size=None):
-    """Main data loading function with DVC integration"""
+    """Main data loading function with automatic fallback"""
     try:
         return load_local_nq_data(split)
-    except Exception as e:
-        print(f"Error loading local data: {e}")
+    except Exception:
+        print("Downloading fresh dataset...")
         download_nq_data()
         return load_local_nq_data(split)
