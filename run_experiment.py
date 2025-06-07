@@ -4,25 +4,25 @@ import time
 from utils.mps_enable import configure_mps
 
 
-def run_benchmarks(sample_size=1000):
+def run_benchmarks(n_sample=1000):
     print("Benchmarking BERT Baseline")
     start = time.time()
-    bert_loss = benchmark_bert(sample_size)
+    bert_loss = benchmark_bert(n_sample)
     print(f"BERT Validation Loss: {bert_loss:.3f}. Time: {time.time()-start:.0f}s")
     
     print("\nBenchmarking Vanilla GPT")
     start = time.time()
-    gpt_loss = benchmark_gpt("gpt2", sample_size)
+    gpt_loss = benchmark_gpt("gpt2", n_sample)
     print(f"GPT Validation Loss: {gpt_loss:.3f}. Time: {time.time()-start:.0f}s")
     return bert_loss, gpt_loss
 
 def main():
     configure_mps()
 
-    sample_size = 500
+    sample_size = 1000
     
     # Initial benchmarks
-    bert_loss, vanilla_gpt_loss = run_benchmarks(sample_size)
+    bert_loss, vanilla_gpt_loss = run_benchmarks()
     
     print("\nTraining GPT Model")
     start = time.time()

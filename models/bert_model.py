@@ -24,7 +24,13 @@ class BertQAModel(pl.LightningModule):
         outputs = self(**batch)
         loss = outputs.loss
         self.log("val_loss", loss)
-        return {"loss": loss}
+        self.validation_step_outputs.append(loss)
+        return loss
+    
+    def on_validation_epoch_end(self):
+        avg_loss = torch.stack(self.validation_step_outputs).mean()
+        self.log("avg_val_loss", avg_loss)
+        self.validation_step_outputs.clear()
     
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=5e-5)
@@ -43,11 +49,17 @@ def create_bert_dataloader(dataset, tokenizer, batch_size=8):
     tokenized.set_format(type="torch", columns=["input_ids", "attention_mask"])
     return DataLoader(tokenized, batch_size=batch_size)
 
-def benchmark_bert():
+def benchmark_bert(sample_size=1000):
     model = BertQAModel()
     tokenizer = model.tokenizer
-    val_data = load_nq_data(split="validation", sample_size=1000)
+    val_data = load_nq_data(split="validation", sample_size=sample_size)
     val_loader = create_bert_dataloader(val_data, tokenizer)
-    trainer = pl.Trainer(max_epochs=1, accelerator="auto", devices="auto")
-    trainer.validate(model, val_loader)
-    return trainer.callback_metrics["val_loss"].item()
+    
+    trainer = pl.Trainer(
+        accelerator="auto",
+        devices="auto",
+        logger=False,
+        enable_checkpointing=False
+    )
+    results = trainer.validate(model, val_loader)
+    return results[0]['avg_val_loss'].item()
