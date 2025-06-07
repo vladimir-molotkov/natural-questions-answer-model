@@ -198,3 +198,4 @@ data/
 
 .DS_Store
 lightning_logs/
+outputs/
