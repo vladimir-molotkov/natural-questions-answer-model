@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-from utils.data_loader import get_nq_data as load_nq_data
+from scripts.data_loader import get_nq_data as load_nq_data
 
 
 def get_dvc_params():

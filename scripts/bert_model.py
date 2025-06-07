@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import BertForQuestionAnswering, BertTokenizerFast
 
-from utils.data_loader import get_nq_data as load_nq_data
+from scripts.data_loader import get_nq_data as load_nq_data
 
 
 def get_dvc_params():
