@@ -2,6 +2,7 @@ import time
 from pathlib import Path
 
 import dvc.api
+import fire
 
 from models.bert_model import benchmark_bert
 from models.gpt_model import benchmark_gpt, train_gpt
@@ -30,34 +31,41 @@ def run_benchmarks():
     return bert_loss, gpt_loss
 
 
-def main():
+def main(benchmark=True, train=True):
     configure_mps()
 
     params = get_dvc_params()
     sample_size = params["data"]["sample_size"]
 
     # Initial benchmarks
-    bert_loss, vanilla_gpt_loss = run_benchmarks()
+    if benchmark:
+        bert_loss, vanilla_gpt_loss = run_benchmarks()
 
-    print("\nTraining GPT Model")
-    start = time.time()
-    trained_model = train_gpt(
-        model_name="gpt2", train_sample_size=2000, val_sample_size=sample_size, epochs=2
-    )
-    print(f"Training completed. Time: {time.time() - start:.0f}s")
+    if train:
+        print("\nTraining GPT Model")
+        start = time.time()
+        trained_model = train_gpt(
+            model_name="gpt2",
+            train_sample_size=2000,
+            val_sample_size=sample_size,
+            epochs=2,
+        )
+        print(f"Training completed. Time: {time.time() - start:.0f}s")
 
-    print("\nBenchmarking Trained GPT")
-    start = time.time()
-    trained_loss = benchmark_gpt(trained_model, sample_size)
-    print(f"Trained GPT Loss: {trained_loss:.4f} | Time: {time.time() - start:.1f}s")
+        print("\nBenchmarking Trained GPT")
+        start = time.time()
+        trained_loss = benchmark_gpt(trained_model, sample_size)
+        print(
+            f"Trained GPT Loss: {trained_loss:.4f} | Time: {time.time() - start:.0f}s"
+        )
 
-    improvement = (vanilla_gpt_loss - trained_loss) / vanilla_gpt_loss * 100
-    print("\nSummary")
-    print(f"BERT Loss: {bert_loss:.4f}")
-    print(f"Vanilla GPT Loss: {vanilla_gpt_loss:.4f}")
-    print(f"Trained GPT Loss: {trained_loss:.4f}")
-    print(f"Improvement: {improvement:.1f}%")
+        improvement = (vanilla_gpt_loss - trained_loss) / vanilla_gpt_loss * 100
+        print("\nSummary")
+        print(f"BERT Loss: {bert_loss:.4f}")
+        print(f"Vanilla GPT Loss: {vanilla_gpt_loss:.4f}")
+        print(f"Trained GPT Loss: {trained_loss:.4f}")
+        print(f"Improvement: {improvement:.1f}%")
 
 
 if __name__ == "__main__":
-    main()
+    fire.Fire(main)

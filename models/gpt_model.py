@@ -64,9 +64,7 @@ def create_gpt_dataloader(dataset, tokenizer, batch_size=8):
         return tokenized
 
     tokenized = dataset.map(tokenize_fn, batched=True)
-    tokenized.set_format(
-        type="torch", columns=["input_ids", "attention_mask", "labels"]
-    )
+    tokenized.set_format(type="torch")
     return DataLoader(tokenized, batch_size=batch_size)
 
 

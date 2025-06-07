@@ -58,7 +58,7 @@ def create_bert_dataloader(dataset, tokenizer, batch_size=8):
         )
 
     tokenized = dataset.map(tokenize_fn, batched=True)
-    # tokenized.set_format(type="torch")
+    tokenized.set_format(type="torch")
     return DataLoader(tokenized, batch_size=batch_size)
 
 
