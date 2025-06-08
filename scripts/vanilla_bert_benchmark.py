@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from transformers import BertForQuestionAnswering, BertTokenizerFast
 
 from scripts.data_loader import get_nq_data
-from scripts.mlflow_utils import MLflowLogger
+from utils.mlflow_utils import MLflowLogger
 
 
 class BertQAModel(pl.LightningModule):

@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 from scripts.data_loader import get_nq_data
-from scripts.mlflow_utils import MLflowLogger
+from utils.mlflow_utils import MLflowLogger
 
 
 class GPT2QAModel(pl.LightningModule):
