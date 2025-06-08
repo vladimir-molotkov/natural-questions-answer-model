@@ -39,8 +39,7 @@
    # Windows (PowerShell)
    (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
    ```
-4. Установите зависимости
-   В папке проекта выполните:
+4. Установите зависимости. В директории проекта выполните:
    ```bash
    poetry install
    ```
@@ -52,8 +51,7 @@
    ```bash
    dvc pull
    ```
-7. Запуск эксперимента
-   После активации окружения выполните:
+7. Запуск эксперимента. После активации окружения выполните:
    ```bash
    python main.py
    ```
