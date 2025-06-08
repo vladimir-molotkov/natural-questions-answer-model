@@ -26,7 +26,7 @@
 ### Внедрение
 Модель может быть использована в качестве простого чат-бота для ответа на вопросы по естестенным науками. Кроме того, модель не требует значительных ресурсов для запуска.
 
-# Установка
+# Setup
 1. Клонируйте репозиторий
    ```bash
    git clone https://github.com/vladimir-molotkov/natural-questions-answer-model.git
@@ -40,7 +40,7 @@
    # Windows (PowerShell)
    (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
    ```
-4. Установите зависимостей
+4. Установите зависимости
    В папке проекта выполните:
    ```bash
    poetry install
@@ -62,4 +62,23 @@
    ```bash
    poetry run python main.py
    ```
+
+# Train
+При запуске main.py без параметров происходит сравнение BERT и GPT2 на тестовой выборке, затем происходит обучение GPT2. Если нужно запустить сразу обучение, то можно запустить с параметром benchmark False
+```bash
+main.py --benchmark False
+```
+Или можно изменить соответствующий параметр в конфигурации Hydra (configs/config.yaml)
+
+# Inference
+Для запуска модели представлен файл inference.py, в котором модель можно запустить для ответа на один вопрос (флаг single) или в формате чат-бота (interactive). В параметре checkpoint_path передается путь до обученной модели. Если его пропустить, то будет использована модель GPT2 с Hugging Face. Для выбора устройства torch используется параметр device (mps, cpu, cuda). Пример использования модели для ответа на один вопрос:
+```bash
+inference.py single ask --question "What is Data Science?"
+```
+Пример запуска модели в интерактивном режиме и выборе устройства mps:
+```bash
+inference.py interactive \
+    --checkpoint_path "lightning_logs/version_0/checkpoints/epoch=2-step=100.ckpt" \
+    --device "mps"
+```
 
