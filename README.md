@@ -32,8 +32,7 @@
    git clone https://github.com/vladimir-molotkov/natural-questions-answer-model.git
    cd natural-questions-answer-model
    ```
-3. Установите Poetry
-   Убедитесь, что у вас установлен `poetry`. Если нет, установите его:
+3. Установите Poetry. Убедитесь, что у вас установлен `poetry`. Если нет, установите его:
    ```bash
    # Linux/macOS
    curl -sSL https://install.python-poetry.org | python3 -
